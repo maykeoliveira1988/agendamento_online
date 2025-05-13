@@ -50,7 +50,7 @@ def set_background(image_file):
 label, .stTextInput label, .stDateInput label {
     color: #ffffff !important;  /* Cor dos textos como "Escolha a data", "Nome completo" */
     font-weight: bold;
-    }}
+    }
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
