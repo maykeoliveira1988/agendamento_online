@@ -5,7 +5,11 @@ from datetime import datetime
 import re
 import shutil
 from dotenv import load_dotenv  # Adicionado para carregar o .env
+from admin import check_password  # Importe a função de verificação de senha do seu código
 
+# Verificação de senha antes de mostrar qualquer coisa
+if not check_password():
+    st.stop()
 # Carregar variáveis de ambiente do .env
 load_dotenv()  # Adicionado para garantir que o .env seja lido
 
