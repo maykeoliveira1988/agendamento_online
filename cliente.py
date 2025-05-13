@@ -6,6 +6,12 @@ import re
 import threading
 import base64
 
+st.set_page_config(
+    page_title="Agendamento Online",
+    page_icon="☀️",
+    layout="centered",  # Layout sem sidebar
+    initial_sidebar_state="collapsed"  # Garante que a sidebar não apareça
+)
 def set_background(image_file):
     with open(image_file, "rb") as f:
         data = f.read()
