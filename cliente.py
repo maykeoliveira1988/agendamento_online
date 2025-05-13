@@ -44,15 +44,14 @@ def set_background(image_file):
     }}
 
     .stMarkdown h1, .stTitle, .stHeader {{
-        color: #ff578a !important;  /* Cor do título principal */
+        color: #ff578a !important;
     }}
 
     label, .stTextInput label, .stDateInput label {{
-        color: #ffffff !important;  /* Rótulos */
+        color: #ffffff !important;
         font-weight: bold;
     }}
 
-    /* Subtítulos, textos diversos e mensagens */
     .stMarkdown p,
     .stMarkdown span,
     .stMarkdown strong,
@@ -60,28 +59,32 @@ def set_background(image_file):
         color: #ffffff !important;
     }}
 
-    /* Textos dentro do checkbox */
     .stCheckbox > label {{
         color: #ffffff !important;
         font-weight: bold;
     }}
 
-    /* Link do WhatsApp */
+    .st-expanderHeader {{
+        color: #ffffff !important;
+        font-weight: bold;
+    }}
+
+    .stAlert {{
+        color: #ffffff !important;
+    }}
+
     a {{
         color: #d86b82 !important;
         font-weight: bold;
         text-decoration: underline;
     }}
 
-    /* Rodapé */
     footer, footer p {{
         color: #ffffff !important;
     }}
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
-
-    
 
 # Chamada
 set_background("images/imagem_fundo.png")
