@@ -24,6 +24,7 @@ def set_background(image_file):
         background-size: cover;
     }}
 
+    /* Campos de entrada */
     .stTextInput > div > input,
     .stSelectbox > div > div,
     .stDateInput > div > input,
@@ -34,6 +35,7 @@ def set_background(image_file):
         border-radius: 10px;
     }}
 
+    /* Botão */
     .stButton > button {{
         background-color: #d86b82;
         color: white;
@@ -43,44 +45,51 @@ def set_background(image_file):
         border: none;
     }}
 
+    /* Títulos */
     .stMarkdown h1, .stTitle, .stHeader {{
         color: #ff578a !important;
     }}
 
+    /* Labels */
     label, .stTextInput label, .stDateInput label {{
         color: #ffffff !important;
         font-weight: bold;
     }}
 
-    .stMarkdown p,
-    .stMarkdown span,
-    .stMarkdown strong,
-    .stMarkdown {{
+    /* Texto em geral */
+    .stMarkdown, .stMarkdown p, .stMarkdown span, .stMarkdown strong,
+    div[data-testid="stMarkdownContainer"] {{
         color: #ffffff !important;
     }}
 
-    .stCheckbox > label {{
+    /* Mensagens de erro (st.error) */
+    div[data-testid="stAlert"] {{
+        color: #ffffff !important;
+        background-color: rgba(255, 0, 0, 0.2) !important;
+    }}
+
+    /* Checkbox */
+    .stCheckbox > label, div[data-testid="stCheckbox"] label {{
         color: #ffffff !important;
         font-weight: bold;
     }}
 
-    .st-expanderHeader {{
+    /* Expander header */
+    .st-expanderHeader, .st-expanderHeader p {{
         color: #ffffff !important;
         font-weight: bold;
     }}
 
-    .stAlert {{
-        color: #ffffff !important;
-    }}
-
-    a {{
-        color: #d86b82 !important;
-        font-weight: bold;
-        text-decoration: underline;
-    }}
-
+    /* Rodapé */
     footer, footer p {{
         color: #ffffff !important;
+    }}
+
+    /* Links */
+    a {{
+        color: #ff578a !important;
+        font-weight: bold;
+        text-decoration: underline;
     }}
     </style>
     """
