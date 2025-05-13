@@ -125,7 +125,7 @@ reservas = carregar_json(ARQUIVO_RESERVAS)
 WHATSAPP_CONTATO = "22997776367"  # Número real fornecido
 whatsapp_contato_formatado = validar_whatsapp(WHATSAPP_CONTATO)
 
-st.title("☀️ Agendamento Online")
+st.title("👙 Agendamento Online")
 st.markdown("Reserve seu horário de bronzeamento")
 
 # Seção de data
