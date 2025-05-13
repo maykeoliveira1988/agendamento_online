@@ -23,7 +23,7 @@ def set_background(image_file):
                     url("data:image/png;base64,{encoded}") no-repeat center center fixed;
         background-size: cover;
     }}
-    
+
     .stTextInput > div > input,
     .stSelectbox > div > div,
     .stDateInput > div > input,
@@ -43,20 +43,21 @@ def set_background(image_file):
         border: none;
     }}
 
-    .stMarkdown h1, .stTitle, .stHeader {
-    color: #ffd700 !important;  /* Cor do título principal (ex: "Agendamento Online") */
-}
+    .stMarkdown h1, .stTitle, .stHeader {{
+        color: #ffd700 !important;  /* Cor do título principal */
+    }}
 
-label, .stTextInput label, .stDateInput label {
-    color: #ffffff !important;  /* Cor dos textos como "Escolha a data", "Nome completo" */
-    font-weight: bold;
-    }
+    label, .stTextInput label, .stDateInput label {{
+        color: #ffffff !important;  /* Cor dos textos como "Escolha a data", "Nome completo" */
+        font-weight: bold;
+    }}
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
 
 # Chamada
 set_background("images/imagem_fundo.png")
+
 
 ARQUIVO_CONFIG = "datas_configuradas.json"
 ARQUIVO_RESERVAS = "reservas.json"
