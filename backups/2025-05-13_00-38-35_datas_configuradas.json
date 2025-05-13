@@ -1,0 +1,18 @@
+{
+  "2025-05-13": {
+    "bloqueado": false,
+    "horarios_disponiveis": [
+      "08:00"
+    ]
+  },
+  "2025-05-14": {
+    "bloqueado": false,
+    "horarios_disponiveis": [
+      "10:00"
+    ]
+  },
+  "2025-05-15": {
+    "bloqueado": false,
+    "horarios_disponiveis": []
+  }
+}
