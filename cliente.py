@@ -8,7 +8,7 @@ import base64
 
 st.set_page_config(
     page_title="Agendamento Online",
-    page_icon="☀️",
+    page_icon="👙",
     layout="centered",  # Layout sem sidebar
     initial_sidebar_state="collapsed"  # Garante que a sidebar não apareça
 )
