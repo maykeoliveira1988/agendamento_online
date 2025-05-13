@@ -43,8 +43,13 @@ def set_background(image_file):
         border: none;
     }}
 
-    .stMarkdown, .stTitle, .stHeader, .stSubheader {{
-        color: #ffffff;
+    .stMarkdown h1, .stTitle, .stHeader {
+    color: #ffd700 !important;  /* Cor do título principal (ex: "Agendamento Online") */
+}
+
+label, .stTextInput label, .stDateInput label {
+    color: #ffffff !important;  /* Cor dos textos como "Escolha a data", "Nome completo" */
+    font-weight: bold;
     }}
     </style>
     """
