@@ -54,37 +54,7 @@ def set_background(image_file):
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
-    .stMarkdown h1, .stTitle, .stHeader {{
-        color: #ffd700 !important;
-    }}
-
-    label, .stTextInput label, .stDateInput label {{
-        color: #ffffff !important;
-        font-weight: bold;
-    }}
-
-    .stMarkdown p,
-    .stMarkdown span,
-    .stMarkdown strong {{
-        color: #ffffff !important;
-    }}
-
-    .stCheckbox > label {{
-        color: #ffffff !important;
-        font-weight: bold;
-    }}
-
-    a {{
-        color: #d86b82 !important;
-        font-weight: bold;
-        text-decoration: underline;
-    }}
-
-    footer, footer p {{
-        color: #ffffff !important;
-    }}
-    </style>
-    """
+    
 
 # Chamada
 set_background("images/imagem_fundo.png")
