@@ -44,7 +44,7 @@ def set_background(image_file):
     }}
 
     .stMarkdown h1, .stTitle, .stHeader {{
-        color: #ffd700 !important;  /* Cor do título principal */
+        color: #ff578a !important;  /* Cor do título principal */
     }}
 
     label, .stTextInput label, .stDateInput label {{
