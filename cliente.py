@@ -6,9 +6,6 @@ import re
 import threading
 import base64
 
-from datetime import date
-data = st.date_input("📅 Escolha a Data*", min_value=date.today())
-
 st.set_page_config(
     page_title="Agendamento Online",
     page_icon="👙",
