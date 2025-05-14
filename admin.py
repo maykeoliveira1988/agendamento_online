@@ -146,6 +146,7 @@ if menu == "Configurações":
 
     # Botão para salvar configurações
     if st.button("💾 Salvar Configuração"):
+        st.write("Botão clicado!")
         configuracoes[data_str] = {
             "bloqueado": bloqueado,
             "horarios_disponiveis": horarios_selecionados
