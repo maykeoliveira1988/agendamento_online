@@ -146,12 +146,12 @@ if menu == "Configurações":
 
     # Botão para salvar configurações
     if st.button("💾 Salvar Configuração"):
-        st.write("Botão clicado!")
         configuracoes[data_str] = {
-            "bloqueado": bloqueado,
-            "horarios_disponiveis": horarios_selecionados
-        }
-        salvar_json(configuracoes, ARQUIVO_CONFIG)
+        "bloqueado": bloqueado,
+        "horarios_disponiveis": horarios_selecionados
+    }
+    st.write("Configuração a ser salva:", configuracoes)  # DEBUG
+    salvar_json(configuracoes, ARQUIVO_CONFIG)
         criar_backup()
         st.success(f"✅ Configuração salva para {data_str}")
 
