@@ -1,75 +1,13 @@
 import streamlit as st
-import json
-import os
-from datetime import datetime
-import re
 import shutil
+from datetime import datetime
 from dotenv import load_dotenv  # Adicionado para carregar o .env
+from sheets_utils import ler_configuracoes, salvar_configuracoes, ler_reservas, salvar_reservas
 
 # Carregar variáveis de ambiente do .env
 load_dotenv()  # Adicionado para garantir que o .env seja lido
 
-# Arquivos
-ARQUIVO_CONFIG = "datas_configuradas.json"
-ARQUIVO_RESERVAS = "reservas.json"
-PASTA_BACKUP = "backups"
-
-# Horários possíveis
-TODOS_HORARIOS = [
-    "08:00", "09:00", "10:00", "11:00", "12:00",
-    "13:00", "14:00", "15:00", "16:00", "17:00",
-    "18:00", "19:00", "20:00", "21:00"
-]
-
 # Funções utilitárias
-def carregar_json(caminho):
-    if not os.path.exists(caminho):
-        return {}
-    
-    try:
-        with open(caminho, "r", encoding='utf-8-sig') as f:
-            conteudo = f.read().strip()
-            if not conteudo:
-                return {}
-            return json.loads(conteudo)
-    except UnicodeDecodeError:
-        try:
-            with open(caminho, "r", encoding='utf-16') as f:
-                conteudo = f.read().strip()
-                if not conteudo:
-                    return {}
-                return json.loads(conteudo)
-        except Exception as e:
-            st.error(f"Erro ao ler o arquivo {caminho}: {e}")
-            return {}
-    except json.JSONDecodeError as e:
-        st.error(f"Arquivo JSON inválido em {caminho}: {e}")
-        return {}
-    except Exception as e:
-        st.error(f"Erro inesperado ao carregar {caminho}: {e}")
-        return {}
-
-def salvar_json(dados, caminho):
-    try:
-        st.write(f"Salvando dados em {caminho}...")  # DEBUG
-        with open(caminho, "w", encoding='utf-8') as f:
-            json.dump(dados, f, indent=2, ensure_ascii=False)
-        return True
-    except Exception as e:
-        st.error(f"Erro ao salvar dados: {e}")
-        return False
-
-def criar_backup():
-    if not os.path.exists(PASTA_BACKUP):
-        os.makedirs(PASTA_BACKUP)
-    
-    data_hora = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    
-    for arquivo in [ARQUIVO_CONFIG, ARQUIVO_RESERVAS]:
-        if os.path.exists(arquivo):
-            nome_backup = f"{data_hora}_{arquivo}"
-            shutil.copy2(arquivo, os.path.join(PASTA_BACKUP, nome_backup))
-
 def check_password():
     def password_entered():
         senha_ambiente = os.getenv("ADMIN_PASSWORD")
@@ -96,9 +34,9 @@ def check_password():
 if not check_password():
     st.stop()
 
-# Carregar dados
-configuracoes = carregar_json(ARQUIVO_CONFIG)
-reservas = carregar_json(ARQUIVO_RESERVAS)
+# Carregar dados do Google Sheets
+configuracoes = ler_configuracoes()  # Agora vem do Google Sheets
+reservas = ler_reservas()  # Agora vem do Google Sheets
 
 # Interface
 st.title("🛠️ Painel Administrativo de Agendamento")
@@ -133,8 +71,7 @@ if menu == "Configurações":
         }
         st.write("Configuração a ser salva:", configuracoes)  # DEBUG
 
-        if salvar_json(configuracoes, ARQUIVO_CONFIG):
-            criar_backup()
+        if salvar_configuracoes(configuracoes):
             st.success(f"✅ Configuração salva para {data_str}")
         else:
             st.error("❌ Falha ao salvar a configuração. Verifique permissões e o console.")
@@ -157,8 +94,7 @@ if menu == "Configurações":
                             if st.button(f"✅ Sim, cancelar {i}"):
                                 reserva_cancelada = reservas_do_dia.pop(i-1)
                                 reservas[data_str] = reservas_do_dia
-                                salvar_json(reservas, ARQUIVO_RESERVAS)
-                                criar_backup()
+                                salvar_reservas(reservas)
                                 st.success(f"Agendamento cancelado: {reserva_cancelada}")
                                 st.experimental_rerun()
                         with col2:
@@ -172,8 +108,7 @@ if menu == "Configurações":
                 with col1:
                     if st.button("✅ Sim, apagar tudo"):
                         reservas[data_str] = []
-                        salvar_json(reservas, ARQUIVO_RESERVAS)
-                        criar_backup()
+                        salvar_reservas(reservas)
                         st.warning(f"⚠️ Todos os agendamentos do dia {data_str} foram apagados.")
                         st.experimental_rerun()
                 with col2:
@@ -181,57 +116,3 @@ if menu == "Configurações":
                         st.info("Operação cancelada")
     else:
         st.info("Nenhum agendamento para este dia.")
-
-elif menu == "Relatórios":
-    st.subheader("📊 Relatórios de Agendamentos")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        data_inicio = st.date_input("Data de início")
-    with col2:
-        data_fim = st.date_input("Data de fim")
-    
-    if st.button("Gerar Relatório"):
-        datas_relatorio = [
-            (datetime.strptime(data, "%Y-%m-%d").date(), data)
-            for data in reservas.keys() 
-            if datetime.strptime(data, "%Y-%m-%d").date() >= data_inicio and 
-               datetime.strptime(data, "%Y-%m-%d").date() <= data_fim
-        ]
-        
-        if not datas_relatorio:
-            st.warning("Nenhum agendamento no período selecionado")
-        else:
-            total_reservas = 0
-            for data_date, data_str in sorted(datas_relatorio):
-                reservas_dia = reservas.get(data_str, [])
-                total_reservas += len(reservas_dia)
-                st.markdown(f"### {data_str} ({len(reservas_dia)} agendamentos)")
-                for reserva in reservas_dia:
-                    st.markdown(f"- {reserva}")
-            
-            st.success(f"Total de agendamentos no período: {total_reservas}")
-
-elif menu == "Backups":
-    st.subheader("💾 Backups do Sistema")
-    
-    if os.path.exists(PASTA_BACKUP):
-        backups = sorted(os.listdir(PASTA_BACKUP), reverse=True)
-        
-        st.info(f"Total de backups disponíveis: {len(backups)}")
-        
-        backup_selecionado = st.selectbox("Selecione um backup para visualizar ou restaurar", backups)
-        
-        if backup_selecionado:
-            caminho_backup = os.path.join(PASTA_BACKUP, backup_selecionado)
-            with open(caminho_backup, 'r', encoding='utf-8-sig') as f:
-                conteudo = json.load(f)
-            st.json(conteudo)
-            
-            if st.button("Restaurar este backup"):
-                arquivo_original = ARQUIVO_CONFIG if ARQUIVO_CONFIG in backup_selecionado else ARQUIVO_RESERVAS
-                shutil.copy2(caminho_backup, arquivo_original)
-                st.success(f"Backup {backup_selecionado} restaurado com sucesso!")
-                st.experimental_rerun()
-    else:
-        st.warning("Nenhum backup encontrado.")
