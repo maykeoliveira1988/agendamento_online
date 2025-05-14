@@ -23,19 +23,16 @@ TODOS_HORARIOS = [
 
 # Funções utilitárias
 def carregar_json(caminho):
-    """Carrega um arquivo JSON, retornando um dicionário vazio se o arquivo estiver vazio, não existir ou for inválido"""
     if not os.path.exists(caminho):
         return {}
     
     try:
-        # Tentar abrir com UTF-8 (padrão)
         with open(caminho, "r", encoding='utf-8-sig') as f:
             conteudo = f.read().strip()
             if not conteudo:
                 return {}
             return json.loads(conteudo)
     except UnicodeDecodeError:
-        # Se falhar, tentar UTF-16
         try:
             with open(caminho, "r", encoding='utf-16') as f:
                 conteudo = f.read().strip()
@@ -53,9 +50,8 @@ def carregar_json(caminho):
         return {}
 
 def salvar_json(dados, caminho):
-    """Salva dados em um arquivo JSON com formatação correta"""
     try:
-        st.write(f"Salvando dados em {caminho}...")
+        st.write(f"Salvando dados em {caminho}...")  # DEBUG
         with open(caminho, "w", encoding='utf-8') as f:
             json.dump(dados, f, indent=2, ensure_ascii=False)
         return True
@@ -75,7 +71,6 @@ def criar_backup():
             shutil.copy2(arquivo, os.path.join(PASTA_BACKUP, nome_backup))
 
 def check_password():
-    """Verifica se o usuário digitou a senha correta"""
     def password_entered():
         senha_ambiente = os.getenv("ADMIN_PASSWORD")
         if not senha_ambiente:
@@ -88,20 +83,10 @@ def check_password():
             st.session_state["password_correct"] = False
     
     if "password_correct" not in st.session_state:
-        st.text_input(
-            "Senha de administrador", 
-            type="password",
-            on_change=password_entered,
-            key="password"
-        )
+        st.text_input("Senha de administrador", type="password", on_change=password_entered, key="password")
         return False
     elif not st.session_state["password_correct"]:
-        st.text_input(
-            "Senha de administrador", 
-            type="password",
-            on_change=password_entered,
-            key="password"
-        )
+        st.text_input("Senha de administrador", type="password", on_change=password_entered, key="password")
         st.error("😕 Senha incorreta")
         return False
     else:
@@ -122,17 +107,14 @@ st.title("🛠️ Painel Administrativo de Agendamento")
 menu = st.sidebar.selectbox("Menu", ["Configurações", "Relatórios", "Backups"])
 
 if menu == "Configurações":
-    # Seleção de data
     data = st.date_input("📅 Escolha a data para configurar")
     data_str = data.strftime("%Y-%m-%d")
 
-    # Carregar configuração existente
     config_do_dia = configuracoes.get(data_str, {
         "bloqueado": False,
         "horarios_disponiveis": []
     })
 
-    # Interface de configuração
     bloqueado = st.checkbox("🔒 Bloquear esse dia para agendamento", value=config_do_dia.get("bloqueado", False))
 
     if not bloqueado:
@@ -144,18 +126,20 @@ if menu == "Configurações":
     else:
         horarios_selecionados = []
 
-    # Botão para salvar configurações
     if st.button("💾 Salvar Configuração"):
         configuracoes[data_str] = {
             "bloqueado": bloqueado,
             "horarios_disponiveis": horarios_selecionados
-    }
-    st.write("Configuração a ser salva:", configuracoes)  # DEBUG
-    salvar_json(configuracoes, ARQUIVO_CONFIG)
-    criar_backup()
-    st.success(f"✅ Configuração salva para {data_str}")
+        }
+        st.write("Configuração a ser salva:", configuracoes)  # DEBUG
 
-    # Mostrar agendamentos do dia
+        if salvar_json(configuracoes, ARQUIVO_CONFIG):
+            criar_backup()
+            st.success(f"✅ Configuração salva para {data_str}")
+        else:
+            st.error("❌ Falha ao salvar a configuração. Verifique permissões e o console.")
+
+    # Agendamentos
     st.subheader("📋 Agendamentos do dia selecionado")
     reservas_do_dia = reservas.get(data_str, [])
     
@@ -201,7 +185,6 @@ if menu == "Configurações":
 elif menu == "Relatórios":
     st.subheader("📊 Relatórios de Agendamentos")
     
-    # Filtros
     col1, col2 = st.columns(2)
     with col1:
         data_inicio = st.date_input("Data de início")
@@ -237,10 +220,7 @@ elif menu == "Backups":
         
         st.info(f"Total de backups disponíveis: {len(backups)}")
         
-        backup_selecionado = st.selectbox(
-            "Selecione um backup para visualizar ou restaurar",
-            backups
-        )
+        backup_selecionado = st.selectbox("Selecione um backup para visualizar ou restaurar", backups)
         
         if backup_selecionado:
             caminho_backup = os.path.join(PASTA_BACKUP, backup_selecionado)
